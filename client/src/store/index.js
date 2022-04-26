@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import { localState } from '../utils/index'
+import localState from 'local-state-w'
 
 const store = createStore({
   state: {

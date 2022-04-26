@@ -8,6 +8,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "local-state-w": "^1.0.0",
+    "sub-w": "^1.0.1",
     "vue": "^3.2.25",
     "vuex": "^4.0.2"
   },
