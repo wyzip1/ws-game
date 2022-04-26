@@ -1,21 +1,56 @@
-<script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vite" />
+  <div class="container">
+    <Login v-if="!user.name" />
+    <div v-else class="userInfo">
+      用户名称：{{user.name}}
+      <button @click="logout">退出登陆</button>
+    </div>
+    <chat-room />
+  </div>
 </template>
 
+<script setup>
+import ChatRoom from './components/ChatRoom/index.vue'
+import Login from './components/Login/index.vue'
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
+const store = useStore()
+const user = computed(() => store.state.user)
+
+function logout() {
+  store.commit('logout')
+}
+</script>
+
+<style scoped>
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 8vh;
+  box-sizing: border-box;
+}
+
+.userInfo {
+  width: 200px;
+  height: 60px;
+  background-color: rgb(242, 242, 242);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  transform: translateY(-10px);
+}
+</style>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+* {
+  margin: 0;
+  padding: 0;
 }
 </style>
