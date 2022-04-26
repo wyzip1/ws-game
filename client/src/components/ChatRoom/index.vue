@@ -40,7 +40,7 @@ watch(user, () => {
     ws.value && ws.value.close()
     return;
   }
-  const WS = new WebSocket('ws://localhost:8085/chatroom?name=' + user.value.name)
+  const WS = new WebSocket('ws://localhost:8087/chatroom?name=' + user.value.name)
   WS.onmessage = (res) => {
     const data = JSON.parse(res.data)
     infoList.value.push(data)

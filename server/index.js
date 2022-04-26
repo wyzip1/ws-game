@@ -1,5 +1,5 @@
 const WebSocketServer = require('wsr-w');
-const server = new WebSocketServer({ port: 8085 });
+const server = new WebSocketServer({ port: 8087 });
 const controller = require('./controller')
 const { sendOther } = require('./utils');
 

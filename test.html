@@ -11,7 +11,7 @@
   <button id="send">发送</button>
 
   <script>
-    const ws = new WebSocket('ws://localhost:8085/chatroom?name=uuu')
+    const ws = new WebSocket('ws://localhost:8087/chatroom?name=uuu')
     const sendFn = () => {
       ws.send(msgInput.value)
       msgInput.value = ''
