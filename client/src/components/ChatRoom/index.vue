@@ -1,5 +1,5 @@
 <template>
-  <div v-if="user.name" class="chatroom">
+  <section v-if="user.name" class="chatroom">
     <div class="infoList" ref="infoListEl">
       <div v-for="(info, index) in infoList" :key="index">
       <div class="tip" v-if="info.type === 'tip'">
@@ -12,16 +12,15 @@
     </div>
     </div>
     <div class="input-msg">
-      <input type="text" v-model="inputMsg" @keydown.enter="send">
-      <button @click="send">发送</button>
+      <w-input type="text" v-model="inputMsg" @keydown.enter="send" />
+      <w-button primary @click="send">发送</w-button>
     </div>
-  </div>
-  <div v-else style="margin-top: 10px">
-    请登录
-  </div>
+  </section>
 </template>
 
 <script setup>
+import wInput from '../UI/w-input.vue';
+import wButton from '../UI/w-button.vue';
 import { computed, ref, watch, nextTick } from 'vue'
 import { useStore } from 'vuex'
 
@@ -38,6 +37,8 @@ window.infoList = infoListEl
 watch(user, () => {
   if(!user.value.name) {
     ws.value && ws.value.close()
+    infoList.value = []
+    inputMsg.value = ''
     return;
   }
   const WS = new WebSocket('ws://localhost:8087/chatroom?name=' + user.value.name)
@@ -45,18 +46,21 @@ watch(user, () => {
     const data = JSON.parse(res.data)
     infoList.value.push(data)
     const {scrollHeight, clientHeight, scrollTop} = infoListEl.value
-    console.log(scrollHeight, clientHeight, scrollTop);
     if((scrollHeight - clientHeight) - scrollTop < 5) nextTick(() => resetBottom())
   }
   
   ws.value = WS
 }, { immediate: true })
 
+const selfSend = (info) => ({ type: 'msg', info, self: true })
+
 function send() {
   if(inputMsg.value.trim() === '') return;
   ws.value.send(inputMsg.value)
-  infoList.value.push({ type: 'msg', info: { data: inputMsg.value, user: user.value.name }, self: true })
+  infoList.value.push(selfSend({ data: inputMsg.value, user: user.value.name }))
   inputMsg.value = ''
+
+  // 视图更新后自动滚动到容器底部查看最新消息
   nextTick(() => {
     resetBottom();
   })
@@ -73,15 +77,18 @@ function resetBottom() {
 </script>
 
 <style scoped>
+section {
+  width: 100%;
+  height: 100%;
+}
 .chatroom {
-  max-width: 1000px;
-  width: 85vw;
-  height: 70vh;
   box-shadow: 0 0 5px 1px #00000033;
   display: flex;
   flex-direction: column;
   padding: 10px 12px 0;
   box-sizing: border-box;
+  min-width: 360px;
+  min-height: 360px;
 }
 
 .infoList {
@@ -117,6 +124,7 @@ function resetBottom() {
   background-color: #fff;
   column-gap: 10px;
   border-top: 1px solid #E7E7E7;
+  padding: 10px 16px;
 }
 
 .msg-content {
@@ -136,11 +144,11 @@ function resetBottom() {
   place-items: center;
   border-radius: 50%;
   box-shadow:  0 0 3px 0 rgba(0, 0, 0, .3);
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 14px;
+  font-size: 12px;
   box-sizing: border-box;
+  white-space: nowrap;
 }
 
 .msg-content .msg{

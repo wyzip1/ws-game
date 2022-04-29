@@ -7,6 +7,9 @@ export default defineConfig({
   //生产模式打包配置
   build:{
     outDir: '../server/dist',//Specify the output directory (relative to project root).
+  },
+  resolve: {
+    alias: '@'
   }
 
 })
